@@ -6,7 +6,6 @@ class ActivityPlannerAgent:
         self.activity_categories = {
             'lavoro': [9, 17],
             'colazione': [7, 9],
-            'studio' : [16, 18]
             'pranzo': [12, 14],
             'cena': [18, 20],
             'allenamento': [6, 8],
