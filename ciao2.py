@@ -45,7 +45,19 @@ class ActivityPlannerAgent:
                         break
                 else:
                     # Se non è possibile trovare un orario disponibile, salta l'attività
-                    skipped_activities.append(activity)
+                    user_input = input(f"{activity} non può essere aggiunto al planner, vuoi modificare l'orario? (s/n)")
+                    if user_input == 's':
+                        new_hour = int(input("Inserisci un nuovo orario: "))
+                        if new_hour + duration <= end_hour:
+                            for i in range(len(activity)):
+                                suggested_hour = new_hour
+                                if not any(
+                                        suggested_hour >= s and suggested_hour < s + d or suggested_hour + duration > s and suggested_hour + duration <= s + d
+                                        for _, s, d in schedule
+                                ):
+                                    break
+                            else:
+                                skipped_activities.append(activity)
                     continue
 
             schedule.append((activity, suggested_hour, duration))
@@ -61,9 +73,9 @@ class ActivityPlannerAgent:
 
 agent = ActivityPlannerAgent()
 activities = [('lavoro', 8), ('colazione', 1), ('pranzo', 2), ('cena', 2), ('allenamento', 1)]
-print("Il seguente è il piano proposto dall'agente:")
-schedule, skipped_activities = agent.suggest_schedule(activities)
 
+schedule, skipped_activities = agent.suggest_schedule(activities)
+print("Il seguente è il piano proposto dall'agente:")
 for activity, hour, duration in schedule:
     print(f"{activity}: {hour}:00 per {duration} ore")
 
@@ -73,3 +85,5 @@ if skipped_activities:
         print(activity)
 
 agent.learn_from_user(schedule)
+
+#vedere se la modifica orario delle att saltate poi le fa inserire nel planner
